@@ -21,12 +21,13 @@
     <main>
       <div class="container center">
         <h3>An error has occurred:</h3>
-        <h4>
+        <br>
+        <h5>
           <?php
             session_start();
             echo $_SESSION['error'];
           ?>
-        </h4>
+        </h5>
       </div>
     </main>
     <footer class="page-footer red">

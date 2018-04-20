@@ -1,29 +1,56 @@
+<?php
+session_start();
+?>
 <html lang="en">
   <head>
     <title>GH-WorkItems</title>
     <meta charset="utf-8">
     <!-- Set page width to device screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <link type="text/css" rel="stylesheet" href="/GH-WorkItems/css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/GH-WorkItems/css/style.css">
   </head>
   <body>
-    <ul id="login-drop" class="dropdown-content">
-      <li><a class="indigo-text" href="login.html">Login</a></li>
-      <li><a class="indigo-text" href="register.html">Register</a></li>
-    </ul>
     <nav>
       <div class="nav-wrapper orange">
         <a class="brand-logo center">Account</a>
         <ul class="right">
-          <li>
-            <a class='dropdown-trigger btn indigo' href='#' data-target='login-drop'>Login/Register</a>
-          </li>
+          <li><a class="btn blue darken-4" href="logout.php">Logout</a></li>
         </ul>
       </div>
     </nav>
     <main>
-    Introductory information about the project will go here...
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs">
+            <li class="tab col s4">
+              <!-- target required or else Google Materialize tabs ignoring default anchor behavior -->
+              <a target="_self" class="active" href="account.php">Account Details</a>
+            </li>
+            <li class="tab col s4">
+              <a target="_self" href="repos.php">My Repos</a>
+            </li>
+            <li class="tab col s4">
+              <a target="_self" href="ticket.php">File a Ticket</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <br>
+      <div class="container">
+        <table class="highlight">
+          <tbody>
+            <tr>
+              <th>Username</th>
+              <td><?php echo $_SESSION['username'] ?></td>
+            </tr>
+            <tr>
+              <th>GitHub Username</th>
+              <td><?php echo $_SESSION['github_user'] ?></td>
+            </tr>
+          <tbody>
+        </table>
+      </div>
     </main>
     <footer class="page-footer orange">
       <div class="container">
@@ -57,7 +84,7 @@
       </div>
     </footer>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="/GH-WorkItems/js/materialize.min.js"></script>
+    <script type="text/javascript" src="/GH-WorkItems/js/init.js"></script>
   </body>
 </html>
