@@ -2,27 +2,40 @@
 /* Database connection settings */
 $host = 'localhost';
 $user = 'root';
-$pass = '';
+$pass = 'password123';
 $db = 'gh_workitems';
 
+/* Start a new session to store data in $_SESSION array */
+session_start();
+
 /* The MYSQL database driver */
-$mysqli = new mysqli($host, $user, $pass) or die($mysqli->error);
+$mysqli = new mysqli($host, $user, $pass);
+
+if ($mysqli->connect_errno) {
+  $message = "The database connection failed: $mysqli->connect_error";
+  errorRedirect($message);
+}
 
 /* Ensure that the database exists before you start using it */
 $sql = "CREATE DATABASE IF NOT EXISTS $db";
 
 if ($mysqli->query($sql) !== TRUE) {
-  $_SESSION['error'] = "Database creation has failed: $mysqli->error";
+  $message = "Database creation has failed: $mysqli->error";
+  errorRedirect($message);
 }
 
 $mysqli = new mysqli($host, $user, $pass, $db);
 
-/* Start a new session to store data in $_SESSION array */
-session_start();
+
+if ($mysqli->connect_errno) {
+  $message = "The database connection failed: $mysqli->connect_error";
+  errorRedirect($message);
+}
 
 /* An error has occurred, redirect to an error page */
-if ($mysqli->connect_errno) {
-  $_SESSION['error'] = "The database connection failed: $mysqli->connect_error";
+function errorRedirect($message) {
+  $_SESSION['error'] = $message;
   header('location: error.php');
+  exit(1);
 }
 ?>

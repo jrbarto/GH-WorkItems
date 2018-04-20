@@ -5,9 +5,8 @@ require 'db_config.php';
 $table_name = "users";
 echo "EMAIL IS " . $_POST['email'];
 if (trim($_POST['email']) == '') {
-  $_SESSION['error'] = "All fields must be filled out when creating an account.";
-  header('location: error.php');
-  exit(1); // Stop current script execution
+  $message = "All fields must be filled out when creating an account.";
+  errorRedirect($message);
 }
 
 $email = $mysqli->escape_string($_POST['email']);
@@ -17,7 +16,7 @@ $gh_auth = $mysqli->escape_string($SESSION['gh_auth']);
 
 /* Query for existing table */
 $sql = "SHOW TABLES LIKE '$table_name'";
-$result = $mysqli->query($sql) or die($mysqli->error);
+$result = $mysqli->query($sql);
 
 /* Create table if it doesn't exist */
 if ($result->num_rows == 0) {
@@ -29,9 +28,8 @@ if ($result->num_rows == 0) {
   )";
   
   if ($mysqli->query($sql) !== TRUE) {
-    $_SESSION['error'] = "Failed to create table: $mysqli->error";
-    header('location: error.php');
-    exit(1);
+    $message = "Failed to create table: $mysqli->error";
+    errorRedirect($message);
   }
 }
 
@@ -39,7 +37,10 @@ if ($result->num_rows == 0) {
 $sql = "INSERT INTO $table_name (EMAIL, PASS, GH_AUTH)
 VALUES ('$email', '$pass', '$gh_auth')";
 
-$mysqli->query($sql) or die($mysqli->error);
+if ($mysqli->query($sql) !== TRUE) {
+  $message = "Failed to insert into table: $mysqli->error";
+  errorRedirect($message);
+}
 
 header('location: /GH-WorkItems/login.html');
 ?>
