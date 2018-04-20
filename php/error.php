@@ -23,8 +23,8 @@
         <h3>An error has occurred:</h3>
         <h4>
           <?php
-          require 'db_config.php';
-          echo $_SESSION['error'];
+            session_start();
+            echo $_SESSION['error'];
           ?>
         </h4>
       </div>

@@ -11,6 +11,10 @@ $mysqli = new mysqli($host, $user, $pass) or die($mysqli->error);
 /* Ensure that the database exists before you start using it */
 $sql = "CREATE DATABASE IF NOT EXISTS $db";
 
+if ($mysqli->query($sql) !== TRUE) {
+  $_SESSION['error'] = "Database creation has failed: $mysqli->error";
+}
+
 $mysqli = new mysqli($host, $user, $pass, $db);
 
 /* Start a new session to store data in $_SESSION array */
