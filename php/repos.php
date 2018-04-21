@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html lang="en">
   <head>
     <title>GH-WorkItems</title>
@@ -6,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="/GH-WorkItems/css/materialize.min.css"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="/GH-WorkItems/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <nav>
@@ -32,6 +36,8 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="container" id="org-container">
       </div>
     </main>
     <footer class="page-footer orange">
@@ -68,5 +74,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/materialize.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/init.js"></script>
+    <script src="/GH-WorkItems/js/repos.js" 
+      github_auth="<?php echo $_SESSION['github_auth']?>"
+      github_user="<?php echo $_SESSION['github_user']?>">
+    </script>
   </body>
 </html>

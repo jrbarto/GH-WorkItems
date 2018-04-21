@@ -38,4 +38,20 @@ function errorRedirect($message) {
   header('location: error.php');
   exit(1);
 }
+
+function createTable($table_name, $sql) {
+  global $mysqli; // Cause references to refer to global variable
+
+  /* Query for existing table */
+  $check = "SHOW TABLES LIKE '$table_name'";
+  $result = $mysqli->query($check);
+
+  /* Create table if it doesn't exist */
+  if ($result->num_rows == 0) {
+    if ($mysqli->query($sql) !== TRUE) {
+      $message = "Failed to create table: $mysqli->error";
+      errorRedirect($message);
+    }
+  }
+}
 ?>
