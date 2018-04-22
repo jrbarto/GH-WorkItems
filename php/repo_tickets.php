@@ -5,6 +5,19 @@ $ticket_table = "tickets";
 $org = $_POST['org'];
 $repo = $_POST['repo'];
 
+/* Create tickets table if it doesn't exist */
+$sql = "CREATE TABLE $ticket_table (
+  id INT NOT NULL AUTO_INCREMENT,
+  organization VARCHAR(100) NOT NULL,
+  repository VARCHAR(100) NOT NULL,
+  contact VARCHAR(100) NOT NULL,
+  description VARCHAR(300),
+  status VARCHAR(20) DEFAULT 'new',
+  FOREIGN KEY (organization, repository) REFERENCES Repositories (organization, repo_name),
+  PRIMARY KEY (id)
+)";
+createTable($ticket_table, $sql);
+
 $sql = "SELECT * FROM $ticket_table WHERE ORGANIZATION='$org' AND REPOSITORY='$repo'";
 $result = $mysqli->query($sql);
 $json_data = [];
@@ -12,7 +25,8 @@ $json_data = [];
 while ($row = $result->fetch_assoc()) {
   $id = $row['id'];
   $contact = $row['contact'];
-  $description = $row['description'];
+  /* Convert double and single quotes to special characters */
+  $description = htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8');
   $status = $row['status'];
   $ticket_json = array(
     'id' => $id,

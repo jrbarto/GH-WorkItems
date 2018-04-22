@@ -4,6 +4,7 @@ var json = JSON.parse(jsonString);
 
 /* Generate tickets after list is created */
 function generateTickets() {
+  console.log("JSON IS " + jsonString);
   var ticketList = document.getElementById('ticket-list');
 
   if (json.length == 0) {
@@ -63,6 +64,14 @@ function generateTickets() {
     var select = document.createElement("select");
     statCol.appendChild(select);
 
+    /* Store variables for use on select change event */
+    select.ticket_id = id;
+    select.badge = badgeSpan;
+    /* Set event to change status on select box */
+    select.addEventListener("change", function() {
+      changeTicketStatus(this.ticket_id, this.options[this.selectedIndex].value, this.badge);
+    });
+
     /* Create the current status of the ticket as selected */
     var currOption = document.createElement("option");
     currOption.value = status;
@@ -105,4 +114,26 @@ function generateTickets() {
 
   /* Re-initialize Google Materialize dropdown select boxes */
   $('select').formSelect();
+}
+
+function changeTicketStatus(id, status, badge) {
+  if (status == "complete" || status == "invalid") {
+    /* Prompt to confirm deletion and return if deletion is cancelled */
+    if (!confirm("Confirm deletion of this ticket!")) {
+      return;
+    }
+  }
+
+  $.ajax({                                                                                                            
+    url: "/GH-WorkItems/php/change_status.php",                                                                                 
+    type: "POST",                                                                                   
+    data: {
+      id: id,
+      status: status
+    },
+    success : function(data) {
+      badge.innerHTML = status;
+      location.reload();
+    }                                                                                            
+  });
 }
