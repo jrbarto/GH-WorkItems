@@ -32,7 +32,22 @@ orgsRequest.onreadystatechange = function() {
       jsonData.push(orgJson);
     }
 
-    getRepos(0);
+    /* Request organization repositories unless the user doesn't belong to any */
+    if (orgs.length == 0) {
+      var row = document.createElement("div");
+      row.classList.add("row", "center");
+      repoSection.appendChild(row);
+      var col = document.createElement("div");
+      col.classList.add("col", "s12");
+      row.appendChild(col);
+      var header = document.createElement("h4");
+      header.classList.add("indigo-text");
+      header.innerHTML = "This User Doesn't Belong To Any Organizations.";
+      col.appendChild(header);
+    }
+    else {
+      getRepos(0);
+    }
   }
 }
 
@@ -56,9 +71,9 @@ function getRepos(index) {
         org.repos.push(repoJSON);
       }
 
-      /* If there are more orgs in the json, continue requesting repositories */
+      /* If there are more orgs in the json, continue generating the JSON with their repositories */
       if (jsonData.length > ++index) {
-        getRepos(index);
+        getRepos(index); // Recursive call to get the next repo
       }
       else {
         /* Populate database with json data */
@@ -108,7 +123,7 @@ function getRepos(index) {
               buttonCol.classList.add("col", "right");
               headRow.appendChild(buttonCol);
               var buttonHeader = document.createElement("h5");
-              buttonHeader.innerHTML = "Repository Page";
+              buttonHeader.innerHTML = "Tickets Page";
               buttonCol.appendChild(buttonHeader);
 
               var row = document.createElement("div");
@@ -167,9 +182,24 @@ function getRepos(index) {
   httpGet(org.repos_url, reposRequest);
 }
 
+/* Dynamically create a form to send POST data to repo_tickets.php */
 function viewTickets(org, repo) {
-  /* Navigate to php page to request and display tickets from the database */
-  console.log("THIS WILL GET THE TICKETS");
+  /* Navigate to page to create tickets */
+  var form = document.createElement("form");
+  form.method = "POST";
+  form.style.display = "none";
+  document.body.appendChild(form);
+  var orgInput = document.createElement("input");
+  orgInput.name = "org";
+  orgInput.value = org;
+  form.appendChild(orgInput);
+  var repoInput = document.createElement("input");
+  repoInput.name = "repo";
+  repoInput.value = repo;
+  form.appendChild(repoInput);
+
+  form.action = "/GH-WorkItems/php/repo_tickets.php";
+  form.submit();
 }
 
 function httpGet(url, request) {

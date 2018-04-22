@@ -5,9 +5,6 @@ require 'db_config.php';
 /* Decode JSON encoded string to get JSON object */
 $json_data = json_decode($_POST['jsonData'], true);
 
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
-
 $orgs_table = "organizations";
 $repos_table = "repositories";
 
@@ -47,14 +44,14 @@ for ($i = 0; $i < count($json_data); $i++) {
   for ($j = 0; $j < count($repos); $j++) {
     $repo = $repos[$j];
     $repo_name = $repo['repo_name'];
+    $ticket_count = 0;
 
     $sql = "SELECT * FROM $repos_table WHERE ORGANIZATION='$org_name' AND REPO_NAME='$repo_name'";
     $result = $mysqli->query($sql);
 
-    /* Request repo and update ticket count if it exists */
+    /* Request repo and get current ticket count if it already exists in database */
     if ($row = $result->fetch_assoc()) {
       $ticket_count = $row['ticket_count'];
-      $json_data[$i]['repos'][$j]['ticket_count'] = $ticket_count;
     }
     /* Insert repo if it doesn't exist */
     else {
@@ -67,6 +64,9 @@ for ($i = 0; $i < count($json_data); $i++) {
         exit(1);
       }
     }
+
+    /* Update the ticket count for this repository in the JSON data */
+    $json_data[$i]['repos'][$j]['ticket_count'] = $ticket_count;
   }
 }
 

@@ -1,9 +1,33 @@
 <?php
-  require 'db_config.php';
+require 'db_config.php';
 
-  $org_table = "organizations";
-  $sql = "SELECT org_name FROM $org_table";
-  $result = $mysqli->query($sql);
+$ticket_table = "tickets";
+$org = $_POST['org'];
+$repo = $_POST['repo'];
+
+$sql = "SELECT * FROM $ticket_table WHERE ORGANIZATION='$org' AND REPOSITORY='$repo'";
+$result = $mysqli->query($sql);
+$json_data = [];
+
+while ($row = $result->fetch_assoc()) {
+  $id = $row['id'];
+  $contact = $row['contact'];
+  $description = $row['description'];
+  $status = $row['status'];
+  $ticket_json = array(
+    'id' => $id,
+    'contact' => $contact,
+    'description' => $description,
+    'status' => $status
+  );
+
+  array_push($json_data, $ticket_json);
+}
+
+$json_string = json_encode($json_data);
+
+/* Pass json string as a parameter to javascript script to generate tickets in html */
+echo "<script src='/GH-WorkItems/js/repo_tickets.js' json_string='$json_string'></script>";
 ?>
 <html lang="en">
   <head>
@@ -15,10 +39,10 @@
     <link type="text/css" rel="stylesheet" href="/GH-WorkItems/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
-  <body>
+  <body onload="generateTickets()">
     <nav>
       <div class="nav-wrapper orange">
-        <a class="brand-logo center">Ticket</a>
+        <a class="brand-logo center"><?php echo "$org/$repo"?></a>
         <ul class="right">
           <li><a class="btn blue darken-4" href="logout.php">Logout</a></li>
         </ul>
@@ -33,54 +57,26 @@
               <a target="_self" href="account.php">Account Details</a>
             </li>
             <li class="tab col s4">
-              <a target="_self" href="repos.php">My Repos</a>
+              <a target="_self" class="active" href="repos.php">My Repos</a>
             </li>
             <li class="tab col s4">
-              <a target="_self" class="active" href="ticket.php">File a Ticket</a>
+              <a target="_self" href="ticket.php">File a Ticket</a>
             </li>
           </ul>
         </div>
       </div>
       <div class="container">
-        <form action="/GH-WorkItems/php/insert_ticket.php" method="post">
-          <div class="row indigo-text">
-            <div class="input-field col s12">
-              <select id="org" name="org">
-                <?php
-                while ($row = $result->fetch_assoc()) {
-                  $org_name = $row['org_name'];
-                  echo "<option value='$org_name'>$org_name</option>";
-                }
-                ?>
-              </select>
-              <label>Organization</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <select id="repo" name="repo">
-              </select>
-              <label>Repository</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-            <input type="text" id="contact" name="contact" class="validate"></input>
-            <label for="contact">Contact Email</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-            <textarea id="description" name="description" class="materialize-textarea"></textarea>
-            <label for="description">Description</label>
-            </div>
-          </div>
-          <div class="row center">
-              <button class="btn waves-effect waves-light indigo" type="submit">Submit Ticket
-                <i class="material-icons right">send</i>
-              </button>
-          </div>
-        </form>
+        <div class="row center">
+          <h3 class="indigo-text">Tickets</h3>
+        </div>
+        <ul class="collapsible" id="ticket-list">
+        </ul>
+      </div>
+      <div class="row center">
+        <a href="/GH-WorkItems/php/repos.php" class="btn waves-effect waves-light indigo">
+          Return
+          <i class="material-icons right">arrow_back</i>
+        </a>
       </div>
     </main>
     <footer class="page-footer orange">
@@ -117,6 +113,5 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/materialize.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/init.js"></script>
-    <script type="text/javascript" src="/GH-WorkItems/js/ticket.js"></script>
   </body>
 </html>

@@ -14,7 +14,7 @@ session_start();
   <body>
     <nav>
       <div class="nav-wrapper orange">
-        <a class="brand-logo center">Account</a>
+        <a class="brand-logo center">Repos</a>
         <ul class="right">
           <li><a class="btn blue darken-4" href="logout.php">Logout</a></li>
         </ul>

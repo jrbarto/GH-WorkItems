@@ -41,11 +41,11 @@ session_start();
         <table class="highlight">
           <tbody>
             <tr>
-              <th>Username</th>
+              <th class="indigo-text">Username</th>
               <td><?php echo $_SESSION['username'] ?></td>
             </tr>
             <tr>
-              <th>GitHub Username</th>
+              <th class="indigo-text">GitHub Username</th>
               <td><?php echo $_SESSION['github_user'] ?></td>
             </tr>
           <tbody>

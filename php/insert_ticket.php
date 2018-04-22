@@ -1,10 +1,50 @@
 <?php
-  require 'db_config.php';
+require 'db_config.php';
 
-  $org_table = "organizations";
-  $sql = "SELECT org_name FROM $org_table";
-  $result = $mysqli->query($sql);
+$ticket_table = "tickets";
+$repo_table = "repositories";
+$org = $_POST['org'];
+$repo = $_POST['repo'];
+$contact = $mysqli->escape_string($_POST['contact']);
+$description = $mysqli->escape_string($_POST['description']);
+
+/* Check for invalid contact email */
+if (!filter_var($contact, FILTER_VALIDATE_EMAIL)) {
+  $message = "The contact email address '$contact' is not valid.";
+  errorRedirect($message);
+}
+
+/* Create tickets table if it doesn't exist */
+$sql = "CREATE TABLE $ticket_table (
+  id INT NOT NULL AUTO_INCREMENT,
+  organization VARCHAR(100) NOT NULL,
+  repository VARCHAR(100) NOT NULL,
+  contact VARCHAR(100) NOT NULL,
+  description VARCHAR(300),
+  status VARCHAR(20) DEFAULT 'new',
+  FOREIGN KEY (organization, repository) REFERENCES Repositories (organization, repo_name),
+  PRIMARY KEY (id)
+)";
+createTable($ticket_table, $sql);
+
+$sql = "INSERT INTO $ticket_table (ORGANIZATION, REPOSITORY, CONTACT, DESCRIPTION)
+VALUES ('$org', '$repo', '$contact', '$description')";
+
+if ($mysqli->query($sql) !== TRUE) {
+  $message = "Failed to insert into table: $mysqli->error";
+  errorRedirect($message);
+}
+
+$sql = "UPDATE $repo_table 
+  SET ticket_count = ticket_count + 1 
+  WHERE organization = '$org' AND repo_name = '$repo'";
+
+if ($mysqli->query($sql) !== TRUE) {
+  $message = "Failed to update table: $mysqli->error";
+  errorRedirect($message);
+}
 ?>
+
 <html lang="en">
   <head>
     <title>GH-WorkItems</title>
@@ -18,7 +58,7 @@
   <body>
     <nav>
       <div class="nav-wrapper orange">
-        <a class="brand-logo center">Ticket</a>
+        <a class="brand-logo center">Account</a>
         <ul class="right">
           <li><a class="btn blue darken-4" href="logout.php">Logout</a></li>
         </ul>
@@ -42,45 +82,17 @@
         </div>
       </div>
       <div class="container">
-        <form action="/GH-WorkItems/php/insert_ticket.php" method="post">
-          <div class="row indigo-text">
-            <div class="input-field col s12">
-              <select id="org" name="org">
-                <?php
-                while ($row = $result->fetch_assoc()) {
-                  $org_name = $row['org_name'];
-                  echo "<option value='$org_name'>$org_name</option>";
-                }
-                ?>
-              </select>
-              <label>Organization</label>
-            </div>
+        <div class="row center">
+          <div class="input-field col s12">
+            <h3>Your Ticket Has Been Filed Successfully</h3>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <select id="repo" name="repo">
-              </select>
-              <label>Repository</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-            <input type="text" id="contact" name="contact" class="validate"></input>
-            <label for="contact">Contact Email</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-            <textarea id="description" name="description" class="materialize-textarea"></textarea>
-            <label for="description">Description</label>
-            </div>
-          </div>
-          <div class="row center">
-              <button class="btn waves-effect waves-light indigo" type="submit">Submit Ticket
-                <i class="material-icons right">send</i>
-              </button>
-          </div>
-        </form>
+        </div>
+        <div class="row center">
+            <a href="/GH-WorkItems/php/ticket.php" class="btn waves-effect waves-light indigo">
+              Return
+              <i class="material-icons right">arrow_back</i>
+            </a>
+        </div>
       </div>
     </main>
     <footer class="page-footer orange">
@@ -117,6 +129,5 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/materialize.min.js"></script>
     <script type="text/javascript" src="/GH-WorkItems/js/init.js"></script>
-    <script type="text/javascript" src="/GH-WorkItems/js/ticket.js"></script>
   </body>
 </html>
