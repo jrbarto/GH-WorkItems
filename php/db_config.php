@@ -2,7 +2,7 @@
 /* Database connection settings */
 $host = 'localhost';
 $user = 'root';
-$pass = 'password123';
+$pass = '';
 $db = 'gh_workitems';
 
 /* Start a new session to store data in $_SESSION array */
