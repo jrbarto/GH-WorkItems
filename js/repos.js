@@ -17,23 +17,42 @@ var orgsRequest = new XMLHttpRequest();
 orgsRequest.onreadystatechange = function() {
   /* Wait until request is complete */
   if (orgsRequest.readyState == XMLHttpRequest.DONE) {
-    var response = orgsRequest.response;
-    var orgs = JSON.parse(response);
+    /* Successful request */
+    if (orgsRequest.status == 200) {
+      var response = orgsRequest.response;
+      var orgs = JSON.parse(response);
 
-    for (var i = 0; i < orgs.length; i++) {
-      var org = orgs[i]
+      for (var i = 0; i < orgs.length; i++) {
+        var org = orgs[i]
 
-      var orgJson = {
-        "org_name" : org.login,
-        "repos_url" : org.repos_url,
-        "repos" : []
-      };
+        var orgJson = {
+          "org_name" : org.login,
+          "repos_url" : org.repos_url,
+          "repos" : []
+        };
 
-      jsonData.push(orgJson);
+        jsonData.push(orgJson);
+      }
+
+      /* Request organization repositories unless the user doesn't belong to any */
+      if (orgs.length == 0) {
+        var row = document.createElement("div");
+        row.classList.add("row", "center");
+        repoSection.appendChild(row);
+        var col = document.createElement("div");
+        col.classList.add("col", "s12");
+        row.appendChild(col);
+        var header = document.createElement("h4");
+        header.classList.add("indigo-text");
+        header.innerHTML = "This User Doesn't Belong To Any Organizations.";
+        col.appendChild(header);
+      }
+      else {
+        getRepos(0);
+      }
     }
-
-    /* Request organization repositories unless the user doesn't belong to any */
-    if (orgs.length == 0) {
+    /* Provide user with details why request failed */
+    else {
       var row = document.createElement("div");
       row.classList.add("row", "center");
       repoSection.appendChild(row);
@@ -42,11 +61,17 @@ orgsRequest.onreadystatechange = function() {
       row.appendChild(col);
       var header = document.createElement("h4");
       header.classList.add("indigo-text");
-      header.innerHTML = "This User Doesn't Belong To Any Organizations.";
+
+      /* We know a 401 is an authentication error with GitHub */
+      if (orgsRequest.status == 401) {
+        header.innerHTML = "Invalid GitHub Username Or Password.";
+      }
+      /* Output other possible errors with the request */
+      else {
+        header.innerHTML = orgsRequest.status + ": " + orgsRequest.statusText;
+      }
+
       col.appendChild(header);
-    }
-    else {
-      getRepos(0);
     }
   }
 }
@@ -73,7 +98,7 @@ function getRepos(index) {
 
       /* If there are more orgs in the json, continue generating the JSON with their repositories */
       if (jsonData.length > ++index) {
-        getRepos(index); // Recursive call to get the next repo
+        getRepos(index); // Recursive call to get the next org's repos
       }
       else {
         /* Populate database with json data */
