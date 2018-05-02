@@ -1,3 +1,5 @@
+/* Script to display repository tickets in the HTML DOM */
+
 /* Get arguments passed as script attributes */
 var jsonString = document.currentScript.getAttribute('json_string');
 var json = JSON.parse(jsonString);

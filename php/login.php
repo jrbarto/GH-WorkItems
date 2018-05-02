@@ -1,4 +1,6 @@
 <?php
+/* PHP script to verify user credentials upon login */
+
 require 'db_config.php';
 
 $username = $mysqli->escape_string($_POST['username']);

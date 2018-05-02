@@ -1,4 +1,6 @@
 <?php
+/* PHP script to change the status of an existing ticket */
+
 require 'db_config.php';
 
 $ticket_table = "tickets";

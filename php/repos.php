@@ -1,3 +1,4 @@
+<!-- Page to display the current user's organizations and repositories -->
 <?php
 session_start();
 ?>

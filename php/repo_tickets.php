@@ -1,3 +1,4 @@
+<!-- Page to display tickets filed against a given repository -->
 <?php
 require 'db_config.php';
 

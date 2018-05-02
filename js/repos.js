@@ -1,3 +1,5 @@
+/* Script to display organizations and repositories in the HTML DOM */
+
 /* The API URL for all GitHub REST API endpoints */
 const GH_API = "https://api.github.com";
 

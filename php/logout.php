@@ -1,4 +1,6 @@
 <?php
+/* PHP script to destroy the active user's session upon logout */
+
 /* Free all session variables and any data registered to the session */
 session_start();
 session_unset();

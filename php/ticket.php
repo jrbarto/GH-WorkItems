@@ -1,3 +1,4 @@
+<!-- Page displayed to file a new ticket in the database -->
 <?php
   require 'db_config.php';
 
@@ -47,6 +48,7 @@
             <div class="input-field col s12">
               <select id="org" name="org">
                 <?php
+                /* Fill the select options with organizations */
                 while ($row = $result->fetch_assoc()) {
                   $org_name = $row['org_name'];
                   echo "<option value='$org_name'>$org_name</option>";

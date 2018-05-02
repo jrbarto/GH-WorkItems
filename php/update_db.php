@@ -1,4 +1,6 @@
 <?php
+/* PHP script to insert organizations and repositories into the database */
+
 /* Initial database setup and configuration */
 require 'db_config.php';
 

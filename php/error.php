@@ -1,3 +1,4 @@
+<!-- Error page displayed when user experiences an error -->
 <html lang="en">
   <head>
     <title>GH-WorkItems</title>
@@ -24,6 +25,7 @@
         <br>
         <h5>
           <?php
+            /* Start session and retrieve error message */
             session_start();
             echo $_SESSION['error'];
           ?>

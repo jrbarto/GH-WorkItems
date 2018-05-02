@@ -1,3 +1,4 @@
+<!-- The account details page displayed after user logs in -->
 <?php
 session_start();
 ?>

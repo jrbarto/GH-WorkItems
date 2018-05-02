@@ -1,4 +1,6 @@
 <?php
+/* Configuration script for the database */
+
 /* Database connection settings */
 $host = 'localhost';
 $user = 'root';

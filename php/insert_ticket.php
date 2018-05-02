@@ -1,3 +1,4 @@
+<!-- Page displayed after user files a new ticket -->
 <?php
 require 'db_config.php';
 

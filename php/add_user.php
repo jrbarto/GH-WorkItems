@@ -1,4 +1,6 @@
 <?php
+/* PHP script to insert a new user in the database */
+
 /* Initial database setup and configuration */
 require 'db_config.php';
 

@@ -1,3 +1,5 @@
+/* Script to display the organization and repository dropdowns for filing a ticket */
+
 /* Load the repositories select box based on the org when the document loads */
 $(document).ready(function(){
   var orgSel = document.getElementById("org");
@@ -24,7 +26,6 @@ function getRepos() {
       var json = JSON.parse(data);
       for (i = 0; i < json.length; i++) {
         var repo = json[i];
-        console.log("REPO IS " + repo.repo_name);
         var option = document.createElement("option");
         option.innerHTML = repo.repo_name;
         option.value = repo.repo_name;
