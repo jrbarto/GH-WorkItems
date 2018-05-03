@@ -1,4 +1,13 @@
 <!-- Error page displayed when user experiences an error -->
+<?php
+session_start();
+$return_page = $_SESSION['return'];
+
+/* If no return page was specified in the session, simply return to root */
+if ($return_page == '') {
+  $return_page = "/GH-WorkItems/index.html";
+}
+?>
 <html lang="en">
   <head>
     <title>GH-WorkItems</title>
@@ -14,7 +23,7 @@
         <a class="brand-logo center">Error</a>
         <ul class="right">
           <li>
-              <li><a class="btn blue darken-4" href="/GH-WorkItems/index.html">Home</a></li>
+              <li><a class="btn blue darken-4" href="<?php echo $return_page ?>">Return</a></li>
           </li>
         </ul>
       </div>

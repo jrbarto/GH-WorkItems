@@ -3,13 +3,14 @@
 
 require 'db_config.php';
 
+$error_return = '/GH-WorkItems/login.html'; // Page to return to after error redirect
 $username = $mysqli->escape_string($_POST['username']);
 $result = $mysqli->query("SELECT * FROM users WHERE username='$username'");
 
 /* Return error if user doesn't exist */
 if ( $result->num_rows == 0 ) {
   $message = "No account matching the specified username exists.";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 else {
   $user = $result->fetch_assoc();
@@ -24,7 +25,7 @@ else {
   }
   else {
     $message = "The password entered is incorrect.";
-    errorRedirect($message);
+    errorRedirect($message, $error_return);
   }
 }
 ?>

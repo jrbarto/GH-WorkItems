@@ -34,9 +34,15 @@ if ($mysqli->connect_errno) {
   errorRedirect($message);
 }
 
-/* An error has occurred, redirect to an error page */
-function errorRedirect($message) {
+/* An error has occurred, redirect to an error page, return page is optional */
+function errorRedirect($message, $return = null) {
   $_SESSION['error'] = $message;
+
+  /* Set the return session variable if supplied */
+  if ($return != null) {
+    $_SESSION['return'] = $return;
+  }
+
   header('location: error.php');
   exit(1);
 }

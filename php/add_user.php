@@ -5,9 +5,11 @@
 require 'db_config.php';
 
 $table_name = "users";
+$error_return = '/GH-WorkItems/register.html'; // Page to return to after error redirect
+
 if (trim($_POST['username']) == '') {
   $message = "All fields must be filled out when creating an account.";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 
 $username = $mysqli->escape_string($_POST['username']);
@@ -34,7 +36,7 @@ if ($result->num_rows == 0) {
   
   if ($mysqli->query($sql) !== TRUE) {
     $message = "Failed to create table: $mysqli->error";
-    errorRedirect($message);
+    errorRedirect($message, $error_return);
   }
 }
 
@@ -44,7 +46,7 @@ VALUES ('$username', '$pass', '$github_auth', '$github_user')";
 
 if ($mysqli->query($sql) !== TRUE) {
   $message = "Failed to insert into table: $mysqli->error";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 
 header('location: /GH-WorkItems/login.html');

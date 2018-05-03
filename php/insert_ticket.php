@@ -2,6 +2,7 @@
 <?php
 require 'db_config.php';
 
+$error_return = '/GH-WorkItems/php/ticket.php'; // Page to return to after error redirect
 $ticket_table = "tickets";
 $repo_table = "repositories";
 $org = $_POST['org'];
@@ -12,7 +13,7 @@ $description = $mysqli->escape_string($_POST['description']);
 /* Check for invalid contact email */
 if (!filter_var($contact, FILTER_VALIDATE_EMAIL)) {
   $message = "The contact email address '$contact' is not valid.";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 
 /* Create tickets table if it doesn't exist */
@@ -33,7 +34,7 @@ VALUES ('$org', '$repo', '$contact', '$description')";
 
 if ($mysqli->query($sql) !== TRUE) {
   $message = "Failed to insert into table: $mysqli->error";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 
 $sql = "UPDATE $repo_table 
@@ -42,7 +43,7 @@ $sql = "UPDATE $repo_table
 
 if ($mysqli->query($sql) !== TRUE) {
   $message = "Failed to update table: $mysqli->error";
-  errorRedirect($message);
+  errorRedirect($message, $error_return);
 }
 ?>
 
